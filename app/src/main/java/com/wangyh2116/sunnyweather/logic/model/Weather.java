@@ -1,5 +1,6 @@
 package com.wangyh2116.sunnyweather.logic.model;
 
+import com.wangyh2116.sunnyweather.logic.Repository;
 import com.wangyh2116.sunnyweather.logic.model.dailyresponse.Daily;
 import com.wangyh2116.sunnyweather.logic.model.realtimeresponse.Realtime;
 

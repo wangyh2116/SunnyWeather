@@ -1,5 +1,6 @@
 package com.wangyh2116.sunnyweather.ui.place;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,11 +20,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.wangyh2116.sunnyweather.MainActivity;
 import com.wangyh2116.sunnyweather.R;
+import com.wangyh2116.sunnyweather.logic.model.Place;
 import com.wangyh2116.sunnyweather.logic.model.PlaceResponse;
+import com.wangyh2116.sunnyweather.ui.weather.WeatherActivity;
 
 public class PlaceFragment extends Fragment {
-    PlaceViewModel viewModel;
+    public static PlaceViewModel viewModel;
     private PlaceAdapter placeAdapter;
     private View view;
 
@@ -31,6 +35,7 @@ public class PlaceFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_place,container,false);
+        viewModel= ViewModelProviders.of(this).get(PlaceViewModel.class);
         return view;
     }
 
@@ -38,7 +43,11 @@ public class PlaceFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel= ViewModelProviders.of(this).get(PlaceViewModel.class);
+        if(getActivity() instanceof MainActivity &&viewModel.isPlaceSaved()){
+            Place place=viewModel.getSavedPlace();
+            WeatherActivity.getPlaceIntent(getContext(),place.getLocation().getLng(),place.getLocation().getLat(),place.getName());
+        }
+
         final RecyclerView recyclerView=view.findViewById(R.id.recyclerView);
         EditText searchPlaceEdit=view.findViewById(R.id.searchPlaceEdit);
         final ImageView bgImageView=view.findViewById(R.id.bgImageView);

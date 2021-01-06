@@ -1,5 +1,6 @@
 package com.wangyh2116.sunnyweather.ui.place;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wangyh2116.sunnyweather.R;
 import com.wangyh2116.sunnyweather.logic.model.Place;
+import com.wangyh2116.sunnyweather.logic.model.Weather;
 import com.wangyh2116.sunnyweather.ui.weather.WeatherActivity;
 
 import java.util.List;
@@ -25,10 +27,10 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
             placeName=itemView.findViewById(R.id.placeName);
         }
     }
-    private Fragment fragment=null;
+    private PlaceFragment fragment=null;
     private List<Place> placeList=null;
 
-    public PlaceAdapter(Fragment fragment, List<Place> placeList) {
+    public PlaceAdapter(PlaceFragment fragment, List<Place> placeList) {
         super();
         this.fragment = fragment;
         this.placeList = placeList;
@@ -44,7 +46,18 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
             public void onClick(View v) {
                 int position = viewHolder.getAdapterPosition();
                 Place place=placeList.get(position);
-                WeatherActivity.getPlaceIntent(parent.getContext(),place.getLocation().getLng(),place.getLocation().getLat(),place.getName());
+                Activity activity=fragment.getActivity();
+                if(activity instanceof WeatherActivity){
+                    ((WeatherActivity) activity).getDrawerLayout().closeDrawers();
+                    ((WeatherActivity) activity).getViewModel().setLocationLng(place.getLocation().getLng());
+                    ((WeatherActivity) activity).getViewModel().setLocationLat(place.getLocation().getLat());
+                    ((WeatherActivity) activity).getViewModel().setPlaceName(place.getName());
+                    ((WeatherActivity) activity).refreshWeather();
+                }else {
+                    WeatherActivity.getPlaceIntent(parent.getContext(), place.getLocation().getLng(), place.getLocation().getLat(), place.getName());
+                    activity.finish();
+                }
+                fragment.viewModel.savePlace(place);
             }
         });
         return viewHolder;

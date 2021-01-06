@@ -7,6 +7,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.wangyh2116.sunnyweather.logic.Repository;
+import com.wangyh2116.sunnyweather.logic.dao.PlaceDao;
 import com.wangyh2116.sunnyweather.logic.model.Place;
 import com.wangyh2116.sunnyweather.logic.model.PlaceResponse;
 
@@ -33,5 +34,15 @@ public class PlaceViewModel extends ViewModel {
     });
     public void searchPlace(String query){
         searchLiveData.setValue(query);
+    }
+
+    public static void savePlace(Place place){
+        Repository.savePlace(place);
+    }
+    public static Place getSavedPlace(){
+        return Repository.getPlace();
+    }
+    public static Boolean isPlaceSaved(){
+        return Repository.isPlaceSaved();
     }
 }

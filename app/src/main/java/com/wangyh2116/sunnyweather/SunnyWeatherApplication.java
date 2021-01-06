@@ -11,7 +11,7 @@ public class SunnyWeatherApplication extends Application {
         super.onCreate();
         context=getApplicationContext();
     }
-    public Context getContext(){
+    public static Context getContext(){
         return context;
     }
 }
